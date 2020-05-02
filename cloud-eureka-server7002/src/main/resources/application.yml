@@ -4,6 +4,8 @@ server:
 eureka:
   instance:
     hostname: localhost7002 # eureka 服务端的实例名称
+#    lease-expiration-duration-in-seconds: # 服务端在受到最后一次心跳后等待时间上线,默认90秒,超时将剔除服务
+  #    lease-renewal-interval-in-seconds: # 客户端向服务端发送心跳的时间间隔,默认为30秒(单位为S)
   client:
     register-with-eureka: false # false表示不向注册中心注册自己,
     fetch-registry: false # false表示自己端就是注册中心,维护服务实例,不需要去检索服务
@@ -11,3 +13,5 @@ eureka:
     # 设置与Eureka Server交互的地址查询服务和注册服务都需要依赖这个地址
 #      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
       defaultZone: http://localhost:7001/eureka/
+  server:
+#    enable-self-preservation: false // 为true开启自我保护机制

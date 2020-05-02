@@ -3,12 +3,15 @@ package show.huanghui.cloudstudy.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import show.huanghui.cloudstudy.entities.CommonResult;
 import show.huanghui.cloudstudy.entities.Payment;
 import show.huanghui.cloudstudy.service.PaymentService;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author guangtou
@@ -20,6 +23,8 @@ public class PaymentController { // 模拟支付/订单模块
 
     @Resource
     private PaymentService paymentService;
+    @Resource
+    private DiscoveryClient discoveryClient;
     @Value("${server.port}")
     private String serverPort;
 
@@ -43,6 +48,22 @@ public class PaymentController { // 模拟支付/订单模块
         }else{
             return new CommonResult(400,"没有对应记录",null);
         }
+    }
+
+    @GetMapping(value = "/payment/discovery")
+    public Object discovery(){
+        // 获取所有注册名称
+        List<String> services = discoveryClient.getServices();
+        for (String element : services) {
+            log.info("****"+element);
+        }
+        // 获取注册名称的信息
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        for (ServiceInstance instance : instances) {
+            log.info(instance.getServiceId()+"\t"+instance.getPort()+"\t"+instance.getUri());
+        }
+        return this.discoveryClient;
+
     }
 
 }
