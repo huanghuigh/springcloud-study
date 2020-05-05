@@ -12,6 +12,7 @@ import show.huanghui.cloudstudy.service.PaymentService;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author guangtou
@@ -40,7 +41,7 @@ public class PaymentController { // 模拟支付/订单模块
     }
 
     @GetMapping("/payment/get/{id}")    // 订单查询
-    public CommonResult getPaymentById(@PathVariable("id") Long id){
+    public CommonResult<Payment> getPaymentById(@PathVariable("id") Long id){
         Payment payment = paymentService.getPaymentById(id);
         log.info("查询结果为:"+payment);
         if(payment != null){
@@ -70,5 +71,17 @@ public class PaymentController { // 模拟支付/订单模块
     public String getPayment(){
         return serverPort;
     }
+    //    测试Feign超时设置
+    @GetMapping(value = "/payment/feign/timeout")
+    public String paymentFeignTimeout(){
+//        延迟3S
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return serverPort;
+    }
+
 
 }
