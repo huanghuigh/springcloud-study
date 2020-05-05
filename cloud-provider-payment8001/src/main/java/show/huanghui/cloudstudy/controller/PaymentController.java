@@ -65,5 +65,10 @@ public class PaymentController { // 模拟支付/订单模块
         return this.discoveryClient;
 
     }
+//    测试自己写的ribbon负载规则
+    @GetMapping(value = "/payment/lb")
+    public String getPayment(){
+        return serverPort;
+    }
 
 }
